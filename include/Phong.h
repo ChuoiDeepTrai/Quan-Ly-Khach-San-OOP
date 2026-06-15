@@ -18,6 +18,7 @@ private:
 public:
     Phong();
     Phong(string maP, string tenP, string loaiP, double giaP);
+    
     // Getter & Setter
     string getMaPhong() const;
     void setMaPhong(string maP);

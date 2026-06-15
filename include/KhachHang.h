@@ -18,6 +18,7 @@ private:
 public:
     KhachHang();
     KhachHang(string ma, string ten, string sdt, string cccd);
+    
     // Getter & Setter
     string getMaKH() const;
     void setMaKH(string ma);
