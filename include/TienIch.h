@@ -23,6 +23,15 @@ public:
     // Xóa khoảng trắng thừa trong chuỗi
     static void XoaKhoangTrangThua(string &tieuDe);
 
+    // Nhập chuỗi string bỏ khoảng trống thừa
+    static string NhapChuoi(const string &msg);
+    
+    // Hàm nhập số thực
+    static double NhapSoThuc(const string &promt, double val);
+
+    // Hàm nhập số nguyên
+    static int NhapSoNguyen(const string &promt, int val);
+
     // Định dạng lại tiền tệ nhập vào
     static string DinhDanhTienVND(long long gia);
 

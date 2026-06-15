@@ -12,6 +12,107 @@ void TienIch::XoaKhoangTrangThua(string &tieuDe)
     tieuDe.erase(tieuDe.find_last_not_of(" \t\r\n") + 1);
 }
 
+string TienIch::NhapChuoi(const string &promt)
+{
+    string s;
+    while (true)
+    {
+        cout << promt;
+        getline(cin, s);
+        XoaKhoangTrangThua(s);
+        if (s.empty())
+        {
+            ThongBaoLoi("Khong duoc de trong!\n");
+            continue;
+        }
+        break;
+    }
+    return s;
+}
+
+double TienIch::NhapSoThuc(const string &promt, double val)
+{   
+    while (true)
+    {
+        string s;
+        cout << promt;
+        getline(cin, s);
+        TienIch::XoaKhoangTrangThua(s);
+
+        if(s.empty())
+        {
+            TienIch::ThongBaoLoi("Khong duoc bo trong!\n");
+            continue;
+        }
+
+        try
+        {
+            size_t giaTri;
+            val = stod(s, &giaTri);
+
+            if(giaTri < s.length())
+            {
+                TienIch::ThongBaoLoi("Loi: Thong tin chua ky tu la! Vui long thu lai.");
+                continue;
+            }
+
+            if(val < 0)
+            {
+                TienIch::ThongBaoLoi("Loi: Gia tri khong duoc am! Vui long thu lai.");
+                continue;
+            }
+            break;
+        }
+        catch(...)
+        {
+            TienIch::ThongBaoLoi("Khong hop le! Vui long nhap mot so thuc.");
+        }
+    }
+    return val;
+}
+
+// Hàm nhập số nguyên
+int TienIch::NhapSoNguyen(const string &promt, int val)
+{
+        while (true)
+    {
+        string s;
+        cout << promt;
+        getline(cin, s);
+        TienIch::XoaKhoangTrangThua(s);
+
+        if(s.empty())
+        {
+            TienIch::ThongBaoLoi("Khong duoc bo trong!\n");
+            continue;
+        }
+
+        try
+        {
+            size_t giaTri;
+            val = stod(s, &giaTri);
+
+            if(giaTri < s.length())
+            {
+                throw string(Color::BOLD + Color::RED + "Chua ky tu la!" + Color::RESET);
+                continue;
+            }
+
+            if(val < 0)
+            {
+                throw string(Color::BOLD + Color::RED + "Loi! Vui long thu lai!" + Color::RESET);
+                continue;
+            }
+            break;
+        }
+        catch(...)
+        {
+            TienIch::ThongBaoLoi("Khong hop le! Vui long nhap mot so nguyen.");
+        }
+    }
+    return val;
+}
+
 // Định dạng lại tiền tệ nhập vào
 string TienIch::DinhDanhTienVND(long long gia)
 {
@@ -34,14 +135,14 @@ string TienIch::DinhDanhTienVND(long long gia)
     return ketqua + " VND";
 }
 
-void TienIch::ThongBaoThanhCong(const string &msg)
+void TienIch::ThongBaoThanhCong(const string &promt)
 {
-    cout << Color::BOLD << Color::GREEN << msg << Color::RESET << "\n";
+    cout << Color::BOLD << Color::GREEN << promt << Color::RESET << "\n";
 }
 
-void TienIch::ThongBaoLoi(const string &msg)
+void TienIch::ThongBaoLoi(const string &promt)
 {
-    cout << Color::BOLD << Color::RED << msg << Color::RESET << "\n";
+    cout << Color::BOLD << Color::RED << promt << Color::RESET << "\n";
 }
 
 // Hiển thị tiêu đề

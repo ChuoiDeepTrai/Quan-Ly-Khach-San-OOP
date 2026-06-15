@@ -18,9 +18,9 @@ int main()
         cout << "1. Nhap them phong.\n";
         cout << "2. Sua thong tin phong.\n";
         cout << "3. Xoa phong.\n";
-        cout << "4. Nhap thong tin khach hang.\n";
+        cout << "4. Nhap them khach hang.\n";
         cout << "5. Sua thong tin khach hang.\n";
-        cout << "6. Xoa thong tin khach hang.\n";
+        cout << "6. Xoa khach hang.\n";
         cout << "7. Dat phong.\n";
         cout << "8. Tra phong.\n";
         cout << "9. Liet ke toan bo phong trong khach san.\n";
@@ -28,9 +28,7 @@ int main()
         cout << "0. Thoat he thong.\n";
         cout << "-----------------------------------------------------------------\n";
 
-        cout << Color::BOLD << Color::BLUE << "Nhap lua chon: " << Color::RESET;
-        cin >> choice;
-        cin.ignore();
+        TienIch::NhapSoNguyen("Nhap lua chon: ", choice);
 
         switch (choice)
         {

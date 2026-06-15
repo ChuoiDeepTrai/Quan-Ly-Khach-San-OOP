@@ -85,8 +85,7 @@ void Phong::DocFilePhong(ifstream &file)
 {
     // Đọc mã phòng
     int maLength;
-    file.read((char *)&maLength, sizeof(maLength));
-    if (maLength > 0)
+    if (file.read((char *)&maLength, sizeof(maLength)) && maLength > 0 && maLength < 1000)
     {
         maPhong.resize(maLength);
         file.read(&maPhong[0], maLength);
@@ -94,16 +93,20 @@ void Phong::DocFilePhong(ifstream &file)
 
     // Đọc tên phòng
     int tenLength;
-    file.read((char *)&tenLength, sizeof(tenLength));
-    tenPhong.resize(tenLength);
-    file.read(&tenPhong[0], tenLength);
-
+    if (file.read((char *)&tenLength, sizeof(tenLength)) && tenLength > 0 && tenLength < 1000)
+    {
+        tenPhong.resize(tenLength);
+        file.read(&tenPhong[0], tenLength);
+    }
     // Đọc loại phòng
     int loaiLength;
-    file.read((char *)&loaiLength, sizeof(loaiLength));
-    loaiPhong.resize(loaiLength);
-    file.read(&loaiPhong[0], loaiLength);
 
+    if (file.read((char *)&loaiLength, sizeof(loaiLength)) && maLength > 0 && maLength < 1000)
+    {
+        loaiPhong.resize(loaiLength);
+        file.read(&loaiPhong[0], loaiLength);
+    }
+    
     // Đọc giá phòng
     file.read((char *)&giaPhong, sizeof(giaPhong));
 
