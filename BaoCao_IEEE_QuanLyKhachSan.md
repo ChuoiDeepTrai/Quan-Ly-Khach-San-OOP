@@ -1160,18 +1160,17 @@ void QuanLyKhachSan::ThemPhong()
 
     while (true)
     {
-        cout << "Nhap ma phong: ";
+        cout << "Nhap ma phong (Nhap 0 de huy): ";
         getline(cin, ma);
-        TienIch::XoaKhoangTrangThua(ma);
-        ma = TienIch::ChuanHoaMa(ma);
+        if (ma == "0")
+        {
+            cout << "Da huy thao tac!\n";
+            return;
+        }
 
         if (timPhong(ma) != nullptr)
         {
             TienIch::ThongBaoLoi("Ma phong da ton tai!");
-        }
-        else if (ma.empty())
-        {
-            TienIch::ThongBaoLoi("Ma phong khong duoc de trong!");
         }
         else
         {
@@ -1181,10 +1180,8 @@ void QuanLyKhachSan::ThemPhong()
 
     cout << "Nhap ten phong: ";
     getline(cin, ten);
-    TienIch::XoaKhoangTrangThua(ten);
     cout << "Nhap loai phong: ";
     getline(cin, loai);
-    TienIch::XoaKhoangTrangThua(loai);
     cout << "Nhap gia phong (VND): ";
     cin >> gia;
     cin.ignore();
@@ -1291,14 +1288,18 @@ void QuanLyKhachSan::XoaPhong()
     }
 
     string ma;
-    cout << "Nhap ma phong can xoa: ";
+    cout << "Nhap ma phong can xoa (Nhap 0 de huy): ";
     getline(cin, ma);
-    ma = TienIch::ChuanHoaMa(ma);
+    if (ma == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     Phong *p = timPhong(ma);
     if (p == nullptr)
     {
-        TienIch::ThongBaoLoi("Khong tim thay phong co ma vua nhap!");
+        cout << "Khong tim thay phong co ma vua nhap!";
         return;
     }
 
@@ -1314,6 +1315,7 @@ void QuanLyKhachSan::XoaPhong()
 
     if (confirm == "Y" || confirm == "y")
     {
+        // Thực hiện xóa phòng khỏi vector bằng con trỏ
         ds_phong.erase(ds_phong.begin() + (p - &ds_phong[0]));
         GhiFilePhong();
         TienIch::ThongBaoThanhCong("Xoa phong thanh cong!");
@@ -1350,22 +1352,23 @@ void QuanLyKhachSan::DanhSachKhachHang()
 void QuanLyKhachSan::ThemKhachHang()
 {
     TienIch::HienThiTieuDe("THEM KHACH HANG");
+
     string maKH, tenKH, sdt, cccd;
 
     while (true)
     {
-        cout << "Nhap ma khach hang: ";
+        cout << "Nhap ma khach hang (Nhap 0 de huy): ";
         getline(cin, maKH);
-        TienIch::XoaKhoangTrangThua(maKH);
         maKH = TienIch::ChuanHoaMa(maKH);
+        if (maKH == "0")
+        {
+            cout << "Da huy thao tac!\n";
+            return;
+        }
 
         if (timKhachHang(maKH) != nullptr)
         {
             TienIch::ThongBaoLoi("Ma khach hang da ton tai! Vui long nhap lai.");
-        }
-        else if (maKH.empty())
-        {
-            TienIch::ThongBaoLoi("Ma khach hang khong duoc de trong!");
         }
         else
         {
@@ -1391,6 +1394,7 @@ void QuanLyKhachSan::ThemKhachHang()
 void QuanLyKhachSan::SuaKhachHang()
 {
     TienIch::HienThiTieuDe("SUA THONG TIN KHACH HANG");
+
     DanhSachKhachHang();
 
     if (ds_khach_hang.empty())
@@ -1400,9 +1404,14 @@ void QuanLyKhachSan::SuaKhachHang()
     }
 
     string maKH;
-    cout << "Nhap ma khach hang can sua: ";
+    cout << "Nhap ma khach hang can sua (Nhap 0 de huy): ";
     getline(cin, maKH);
     maKH = TienIch::ChuanHoaMa(maKH);
+    if (maKH == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     KhachHang *kh = timKhachHang(maKH);
     if (kh == nullptr)
@@ -1477,6 +1486,7 @@ void QuanLyKhachSan::SuaKhachHang()
 void QuanLyKhachSan::XoaKhachHang()
 {
     TienIch::HienThiTieuDe("XOA THONG TIN KHACH HANG");
+
     if (ds_khach_hang.empty())
     {
         TienIch::ThongBaoLoi("Danh sach khach hang dang trong!");
@@ -1484,10 +1494,15 @@ void QuanLyKhachSan::XoaKhachHang()
     }
 
     DanhSachKhachHang();
+
     string maKH;
-    cout << "Nhap ma khach hang can xoa: ";
+    cout << "Nhap ma khach hang can xoa (Nhap 0 de huy): ";
     getline(cin, maKH);
-    maKH = TienIch::ChuanHoaMa(maKH);
+    if (maKH == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     KhachHang *kh = timKhachHang(maKH);
     if (kh == nullptr)
@@ -1565,15 +1580,19 @@ void QuanLyKhachSan::DatPhongKhachSan()
 
     if (ds_khach_hang.empty())
     {
-        TienIch::ThongBaoLoi("Danh sach khach hang dang trong! Vui long dang ky khach hang truoc.");
+        TienIch::ThongBaoLoi("Danh sach khach hang dang trong!");
         return;
     }
 
     DanhSachKhachHang();
     string maKH;
-    cout << "Nhap ma khach hang muon dat phong: ";
+    cout << "Nhap ma khach hang muon dat phong (Nhap 0 de huy): ";
     getline(cin, maKH);
-    maKH = TienIch::ChuanHoaMa(maKH);
+    if (maKH == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     KhachHang *kh = timKhachHang(maKH);
     if (kh == nullptr)
@@ -1584,9 +1603,13 @@ void QuanLyKhachSan::DatPhongKhachSan()
 
     DanhSachPhongTrong();
     string maP;
-    cout << "Nhap ma phong muon dat: ";
+    cout << "Nhap ma phong muon dat (Nhap 0 de huy): ";
     getline(cin, maP);
-    maP = TienIch::ChuanHoaMa(maP);
+    if (maP == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     Phong *p = timPhong(maP);
     if (p == nullptr)
@@ -1669,12 +1692,17 @@ void QuanLyKhachSan::DanhSachPhongThue()
 void QuanLyKhachSan::TraPhongCheckOut()
 {
     TienIch::HienThiTieuDe("TRA PHONG");
+
     DanhSachPhongThue();
 
     string maP;
-    cout << "Nhap ma phong can tra: ";
+    cout << "Nhap ma phong can tra (Nhap 0 de huy): ";
     getline(cin, maP);
-    maP = TienIch::ChuanHoaMa(maP);
+    if (maP == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     Phong *p = timPhong(maP);
     DatPhong *dp = timDatPhongHoatDong(maP);

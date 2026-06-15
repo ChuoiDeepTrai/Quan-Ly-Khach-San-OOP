@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "Phong.h"
+#include "../include/Phong.h"
 
 using namespace std; 
 

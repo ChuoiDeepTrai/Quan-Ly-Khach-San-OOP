@@ -1,7 +1,7 @@
-#include "QuanLyKhachSan.h"
-#include "iostream"
-#include "fstream"
-#include "iomanip"
+#include "../include/QuanLyKhachSan.h"
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 
 using namespace std; 
 
@@ -67,7 +67,11 @@ QuanLyKhachSan::QuanLyKhachSan()
     taiToanBoDuLieu();
 }
 
+// =====================================
 // --- XỬ LÝ FILE  ---
+// =====================================
+
+// 1. Ghi/Đọc file phòng
 void QuanLyKhachSan::GhiFilePhong() const
 {
     ofstream file(FILE_PHONG, ios::binary | ios::trunc);
@@ -106,6 +110,7 @@ void QuanLyKhachSan::DocFilePhong()
     file.close();
 }
 
+// 2. Ghi/Đọc file khách hàng
 void QuanLyKhachSan::GhiFileKhachHang() const
 {
     ofstream file(FILE_KHACH_HANG, ios::binary | ios::trunc);
@@ -144,6 +149,7 @@ void QuanLyKhachSan::DocFileKhachHang()
     file.close();
 }
 
+// 3. Ghi/Đọc file đặt phòng
 void QuanLyKhachSan::GhiFileDatPhong() const
 {
     ofstream file(FILE_DAT_PHONG, ios::binary | ios::trunc);
@@ -181,6 +187,7 @@ void QuanLyKhachSan::DocFileDatPhong()
     file.close();
 }
 
+// 4. Tải/Load các file
 void QuanLyKhachSan::luuToanBoDuLieu() const
 {
     GhiFilePhong();
@@ -195,7 +202,11 @@ void QuanLyKhachSan::taiToanBoDuLieu()
     DocFileDatPhong();
 }
 
-// --- QUẢN LÝ DANH SÁCH PHÒNG ---
+// =====================================
+// --- QUẢN LÝ DANH SÁCH ---
+// =====================================
+
+// 1. Danh sách phòng.
 void QuanLyKhachSan::DanhSachPhong()
 {
     cout << Color::BOLD << "\n"
@@ -222,6 +233,128 @@ void QuanLyKhachSan::DanhSachPhong()
     cout << string(85, '-') << "\n";
 }
 
+// 2. Danh sách khách hàng
+void QuanLyKhachSan::DanhSachKhachHang()
+{
+    cout << Color::BOLD << "\n"
+         << setw(50) << right << "--- DANH SACH KHACH HANG ---\n"
+         << Color::RESET;
+
+    cout << left;
+    cout << setw(15) << "Ma KH"
+         << setw(25) << "Ten KH"
+         << setw(20) << "SDT"
+         << setw(20) << "CCCD" << "\n";
+    cout << string(75, '-') << "\n";
+
+    for (const auto &kh : ds_khach_hang)
+    {
+        cout << setw(15) << kh.getMaKH()
+             << setw(25) << kh.getTenKH()
+             << setw(20) << kh.getSDT()
+             << setw(20) << kh.getCCCD() << "\n";
+    }
+    cout << string(75, '-') << "\n";
+}
+
+// 3. Danh sách phòng đang trống
+void QuanLyKhachSan::DanhSachPhongTrong()
+{
+    cout << Color::BOLD << "\n"
+         << setw(50) << right << "--- DANH SACH PHONG TRONG ---\n"
+         << Color::RESET;
+    cout << left;
+    cout << setw(12) << "Ma Phong"
+         << setw(22) << "Ten phong"
+         << setw(18) << "Loai phong"
+         << setw(20) << "Gia phong"
+         << setw(10) << "Trang thai" << "\n";
+    cout << string(85, '-') << "\n";
+
+    int countTrong = 0;
+    for (const auto &p : ds_phong)
+    {
+        string tt = Color::GREEN + "Dang trong" + Color::RESET;
+        if (!p.getTrangThai())
+        {
+            cout << left;
+            cout << setw(12) << p.getMaPhong()
+                 << setw(22) << p.getTenPhong()
+                 << setw(18) << p.getLoaiPhong()
+                 << setw(20) << TienIch::DinhDanhTienVND(p.getGiaPhong())
+                 << setw(10) << tt << "\n";
+            countTrong++;
+        }
+    }
+    cout << string(85, '-') << "\n";
+
+    if (countTrong == 0)
+    {
+        TienIch::ThongBaoLoi("Hien tai tat ca phong deu da kin!");
+        return;
+    }
+}
+
+// 4. Danh sách phòng đang được thuê
+void QuanLyKhachSan::DanhSachPhongThue()
+{
+    cout << Color::BOLD << "\n"
+         << right << setw(100) << "--- DANH SACH PHONG HIEN DANG DUOC THUE ---\n"
+         << Color::RESET;
+
+    cout << left;
+    cout << setw(15) << "Ma Phong"
+         << setw(22) << "Ten Phong"
+         << setw(15) << "Ma KH"
+         << setw(25) << "Ten KH"
+         << setw(18) << "Loai Phong"
+         << setw(20) << "Gia Phong"
+         << setw(25) << "Thoi Gian Check-In"
+         << setw(10) << "Trang Thai" << "\n";
+    cout << string(150, '-') << "\n";
+
+    int demPhongThue = 0;
+
+    for (const auto &dp : ds_dat_phong)
+    {
+        if (dp.getTrangThai())
+        {
+            Phong *p = timPhong(dp.getMaPhong());
+            KhachHang *kh = timKhachHang(dp.getMaKH());
+
+            string tenP = p->getTenPhong();
+            string loaiP = p->getLoaiPhong();
+            string giaP = TienIch::DinhDanhTienVND(p->getGiaPhong());
+
+            string tenkh = kh->getTenKH();
+
+            string tt = Color::RED + "Dang thue" + Color::RESET;
+
+            cout << setw(15) << p->getMaPhong()
+                 << setw(22) << tenP
+                 << setw(15) << kh->getMaKH()
+                 << setw(25) << tenkh
+                 << setw(18) << loaiP
+                 << setw(20) << giaP
+                 << setw(25) << dp.getNgayDat()
+                 << setw(10) << tt << "\n";
+
+            demPhongThue++;
+        }
+    }
+
+    if (demPhongThue == 0)
+    {
+        TienIch::ThongBaoLoi("Chua co phong nao duoc thue!");
+        return;
+    }
+    cout << string(150, '-') << "\n";
+}
+
+// =====================================
+// --- CÁC CHỨC NĂNG CHÍNH ---
+// =====================================
+
 // 1. Thêm khách hàng
 void QuanLyKhachSan::ThemPhong()
 {
@@ -231,8 +364,13 @@ void QuanLyKhachSan::ThemPhong()
 
     while (true)
     {
-        cout << "Nhap ma phong: ";
+        cout << "Nhap ma phong (Nhap 0 de huy): ";
         getline(cin, ma);
+        if (ma == "0")
+        {
+            cout << "Da huy thao tac!\n";
+            return;
+        }
 
         if (timPhong(ma) != nullptr)
         {
@@ -269,8 +407,13 @@ void QuanLyKhachSan::SuaPhong()
     }
 
     string ma;
-    cout << "Nhap ma phong: ";
+    cout << "Nhap ma phong can sua (Nhap 0 de huy): ";
     getline(cin, ma);
+    if (ma == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     Phong *p = timPhong(ma);
     if (p == nullptr)
@@ -341,7 +484,7 @@ void QuanLyKhachSan::SuaPhong()
     TienIch::ThongBaoThanhCong("Cap nhat thong tin phong thanh cong.");
 }
 
-// 3. Xoa phong
+// 3. Xóa phòng
 void QuanLyKhachSan::XoaPhong()
 {
     TienIch::HienThiTieuDe("XOA PHONG");
@@ -353,8 +496,13 @@ void QuanLyKhachSan::XoaPhong()
     }
 
     string ma;
-    cout << "Nhap ma phong: ";
+    cout << "Nhap ma phong can xoa (Nhap 0 de huy): ";
     getline(cin, ma);
+    if (ma == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     Phong *p = timPhong(ma);
     if (p == nullptr)
@@ -386,67 +534,7 @@ void QuanLyKhachSan::XoaPhong()
     }
 }
 
-// --- QUẢN LÝ DANH SACH KHACH HANG ---
-void QuanLyKhachSan::DanhSachKhachHang()
-{
-    cout << Color::BOLD << "\n"
-         << setw(50) << right << "--- DANH SACH KHACH HANG ---\n"
-         << Color::RESET;
-
-    cout << left;
-    cout << setw(15) << "Ma KH"
-         << setw(25) << "Ten KH"
-         << setw(20) << "SDT"
-         << setw(20) << "CCCD" << "\n";
-    cout << string(75, '-') << "\n";
-
-    for (const auto &kh : ds_khach_hang)
-    {
-        cout << setw(15) << kh.getMaKH()
-             << setw(25) << kh.getTenKH()
-             << setw(20) << kh.getSDT()
-             << setw(20) << kh.getCCCD() << "\n";
-    }
-    cout << string(75, '-') << "\n";
-}
-
-// Thêm khách hàng
-void QuanLyKhachSan::ThemKhachHang()
-{
-    TienIch::HienThiTieuDe("THEM KHACH HANG");
-
-    string maKH, tenKH, sdt, cccd;
-
-    while (true)
-    {
-        cout << "Nhap ma khach hang: ";
-        cin.ignore();
-        getline(cin, maKH);
-        maKH = TienIch::ChuanHoaMa(maKH);
-
-        if (timKhachHang(maKH) != nullptr)
-        {
-            TienIch::ThongBaoLoi("Ma khach hang da ton tai! Vui long nhap lai.");
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    cout << "Nhap ten khach hang: ";
-    getline(cin, tenKH);
-    cout << "Nhap SDT khach hang: ";
-    getline(cin, sdt);
-    cout << "Nhap CCCD khach hang: ";
-    getline(cin, cccd);
-
-    ds_khach_hang.push_back(KhachHang(maKH, tenKH, sdt, cccd));
-    GhiFileKhachHang();
-    TienIch::ThongBaoThanhCong("Them thong tin khach hang thanh cong!");
-}
-
-// Sửa thông tin khách hàng
+// 4. Sửa thông tin khách hàng
 void QuanLyKhachSan::SuaKhachHang()
 {
     TienIch::HienThiTieuDe("SUA THONG TIN KHACH HANG");
@@ -460,9 +548,14 @@ void QuanLyKhachSan::SuaKhachHang()
     }
 
     string maKH;
-    cout << "Nhap ma khach hang: ";
+    cout << "Nhap ma khach hang can sua (Nhap 0 de huy): ";
     getline(cin, maKH);
     maKH = TienIch::ChuanHoaMa(maKH);
+    if (maKH == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     KhachHang *kh = timKhachHang(maKH);
 
@@ -531,10 +624,10 @@ void QuanLyKhachSan::SuaKhachHang()
     TienIch::ThongBaoThanhCong("Cap nhat thong tin khach hang thanh cong!");
 }
 
-// Xoa thong tin khach hang
+// 5. Xóa khách hàng
 void QuanLyKhachSan::XoaKhachHang()
 {
-    TienIch::HienThiTieuDe("XOA THONG TIN KHACH HANG");
+    TienIch::HienThiTieuDe("XOA KHACH HANG");
 
     if (ds_khach_hang.empty())
     {
@@ -545,9 +638,13 @@ void QuanLyKhachSan::XoaKhachHang()
     DanhSachKhachHang();
 
     string maKH;
-    cout << "Nhap ma khach hang: ";
-    cin.ignore();
+    cout << "Nhap ma khach hang can xoa (Nhap 0 de huy): ";
     getline(cin, maKH);
+    if (maKH == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     KhachHang *kh = timKhachHang(maKH);
     if (kh == nullptr)
@@ -579,43 +676,7 @@ void QuanLyKhachSan::XoaKhachHang()
     }
 }
 
-void QuanLyKhachSan::DanhSachPhongTrong()
-{
-    cout << Color::BOLD << "\n"
-         << setw(50) << right << "--- DANH SACH PHONG TRONG ---\n"
-         << Color::RESET;
-    cout << left;
-    cout << setw(12) << "Ma Phong"
-         << setw(22) << "Ten phong"
-         << setw(18) << "Loai phong"
-         << setw(20) << "Gia phong"
-         << setw(10) << "Trang thai" << "\n";
-    cout << string(85, '-') << "\n";
-
-    int countTrong = 0;
-    for (const auto &p : ds_phong)
-    {
-        string tt = Color::GREEN + "Dang trong" + Color::RESET;
-        if (!p.getTrangThai())
-        {
-            cout << left;
-            cout << setw(12) << p.getMaPhong()
-                 << setw(22) << p.getTenPhong()
-                 << setw(18) << p.getLoaiPhong()
-                 << setw(20) << TienIch::DinhDanhTienVND(p.getGiaPhong())
-                 << setw(10) << tt << "\n";
-            countTrong++;
-        }
-    }
-    cout << string(85, '-') << "\n";
-
-    if (countTrong == 0)
-    {
-        TienIch::ThongBaoLoi("Hien tai tat ca phong deu da kin!");
-        return;
-    }
-}
-
+// 6. Đặt phòng khách sạn (check-in)
 void QuanLyKhachSan::DatPhongKhachSan()
 {
     TienIch::HienThiTieuDe("DAT PHONG");
@@ -634,8 +695,13 @@ void QuanLyKhachSan::DatPhongKhachSan()
 
     DanhSachKhachHang();
     string maKH;
-    cout << "Nhap ma phong muon dat: ";
+    cout << "Nhap ma khach hang muon dat phong (Nhap 0 de huy): ";
     getline(cin, maKH);
+    if (maKH == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     KhachHang *kh = timKhachHang(maKH);
     if (kh == nullptr)
@@ -646,8 +712,13 @@ void QuanLyKhachSan::DatPhongKhachSan()
 
     DanhSachPhongTrong();
     string maP;
-    cout << "Nhap ma phong muon dat: ";
+    cout << "Nhap ma phong muon dat (Nhap 0 de huy): ";
     getline(cin, maP);
+    if (maP == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     Phong *p = timPhong(maP);
     if (p == nullptr)
@@ -677,62 +748,7 @@ void QuanLyKhachSan::DatPhongKhachSan()
     cout << "--------------------------------------------\n";
 }
 
-// Danh sách các phòng đang được thuê
-void QuanLyKhachSan::DanhSachPhongThue()
-{
-    cout << Color::BOLD << "\n"
-         << right << setw(100) << "--- DANH SACH PHONG HIEN DANG DUOC THUE ---\n"
-         << Color::RESET;
-
-    cout << left;
-    cout << setw(15) << "Ma Phong"
-         << setw(22) << "Ten Phong"
-         << setw(15) << "Ma KH"
-         << setw(25) << "Ten KH"
-         << setw(18) << "Loai Phong"
-         << setw(20) << "Gia Phong"
-         << setw(25) << "Thoi Gian Check-In"
-         << setw(10) << "Trang Thai" << "\n";
-    cout << string(150, '-') << "\n";
-
-    int demPhongThue = 0;
-
-    for (const auto &dp : ds_dat_phong)
-    {
-        if (dp.getTrangThai())
-        {
-            Phong *p = timPhong(dp.getMaPhong());
-            KhachHang *kh = timKhachHang(dp.getMaKH());
-
-            string tenP = p->getTenPhong();
-            string loaiP = p->getLoaiPhong();
-            string giaP = TienIch::DinhDanhTienVND(p->getGiaPhong());
-
-            string tenkh = kh->getTenKH();
-
-            string tt = Color::RED + "Dang thue" + Color::RESET;
-
-            cout << setw(15) << p->getMaPhong()
-                 << setw(22) << tenP
-                 << setw(15) << kh->getMaKH()
-                 << setw(25) << tenkh
-                 << setw(18) << loaiP
-                 << setw(20) << giaP
-                 << setw(25) << dp.getNgayDat()
-                 << setw(10) << tt << "\n";
-
-            demPhongThue++;
-        }
-    }
-
-    if (demPhongThue == 0)
-    {
-        TienIch::ThongBaoLoi("Chua co phong nao duoc thue!");
-        return;
-    }
-    cout << string(150, '-') << "\n";
-}
-
+// 7. Trả phòng khách sạn (check-out)
 void QuanLyKhachSan::TraPhongCheckOut()
 {
     TienIch::HienThiTieuDe("TRA PHONG");
@@ -740,8 +756,13 @@ void QuanLyKhachSan::TraPhongCheckOut()
     DanhSachPhongThue();
 
     string maP;
-    cout << "Nhap ma phong can tra: ";
+    cout << "Nhap ma phong can tra (Nhap 0 de huy): ";
     getline(cin, maP);
+    if (maP == "0")
+    {
+        cout << "Da huy thao tac!\n";
+        return;
+    }
 
     Phong *p = timPhong(maP);
     DatPhong *dp = timDatPhongHoatDong(maP);

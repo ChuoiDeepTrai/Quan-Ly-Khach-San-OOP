@@ -15,9 +15,9 @@ class QuanLyKhachSan
 {
 private:
     // Tên các tệp dữ liệu nhị phân
-    const string FILE_PHONG = "phong.dat";
-    const string FILE_KHACH_HANG = "khachhang.dat";
-    const string FILE_DAT_PHONG = "datphong.dat";
+    const string FILE_PHONG      = "data/phong.dat";
+    const string FILE_KHACH_HANG  = "data/khachhang.dat";
+    const string FILE_DAT_PHONG   = "data/datphong.dat";
 
     // Biến toàn cục
     vector<Phong> ds_phong;
@@ -41,22 +41,36 @@ public:
     QuanLyKhachSan();
 
     // --- XỬ LÝ FILE  ---
+    // 1. Ghi/Đọc file phòng
     void GhiFilePhong() const;  
     void DocFilePhong();
 
+    // 2. Ghi/Đọc file khách hàng
     void GhiFileKhachHang() const;
     void DocFileKhachHang();
 
+    // 4. Ghi/Đọc file đặt phòng
     void GhiFileDatPhong() const;
     void DocFileDatPhong();
 
+    // Tải/Lưu dữ liệu
     void luuToanBoDuLieu() const;
-
     void taiToanBoDuLieu();
 
-    // --- QUẢN LÝ DANH SÁCH PHÒNG ---
+    // --- QUẢN LÝ DANH SÁCH ---
+    // 1. Danh sách phòng
     void DanhSachPhong();
 
+    // 2. Danh sách khách hàng
+    void DanhSachKhachHang();
+
+    // 3. Danh sách phong trống
+    void DanhSachPhongTrong();
+
+    // 4. Danh sách các phòng đang được thuê
+    void DanhSachPhongThue();
+
+    // --- Các chức năng chính ---
     // 1. Thêm khách hàng
     void ThemPhong();
 
@@ -66,27 +80,19 @@ public:
     // 3. Xoa phong
     void XoaPhong();
 
-    // --- QUẢN LÝ DANH SACH KHACH HANG ---
-    void DanhSachKhachHang();
-
-    // Thêm khách hàng
+    // 4. Thêm khách hàng
     void ThemKhachHang();
 
-    // Sửa thông tin khách hàng
+    // 5. Sửa thông tin khách hàng
     void SuaKhachHang();
 
-    // Xoa thong tin khach hang
+    // 6. Xóa khách hàng
     void XoaKhachHang();
 
-    // Danh sách phong trống
-    void DanhSachPhongTrong();
-
+    // 7. Đặt phòng khách sạn (check-in)
     void DatPhongKhachSan();
 
-    // Danh sách các phòng đang được thuê
-    void DanhSachPhongThue();
-
-    // Check-Out
+    // 8. Trả phòng khách sạn (check-out)
     void TraPhongCheckOut();
 };
 

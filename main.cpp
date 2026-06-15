@@ -1,5 +1,5 @@
 #include <iostream>
-#include "QuanLyKhachSan.h"
+#include "include/QuanLyKhachSan.h"
 
 using namespace std;
 
@@ -54,12 +54,16 @@ int main()
             break;
         case 7:
             qlks.DatPhongKhachSan();
+            break;
         case 8:
             qlks.TraPhongCheckOut();
+            break;
         case 9:
             qlks.DanhSachPhongTrong();
+            break;
         case 10:
             qlks.DanhSachPhongThue();
+            break;
         case 0:
             TienIch::ThongBaoThanhCong("Cam on ban da su dung he thong!");
             break;
