@@ -75,25 +75,41 @@ void KhachHang::DocFileKhachHang(ifstream &file)
 {
     // Đọc mã khách hàng
     int maKHLength;
-    file.read((char *)&maKHLength, sizeof(maKHLength));
+    if (!file.read((char *)&maKHLength, sizeof(maKHLength)) && maKHLength <= 0 && maKHLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     maKH.resize(maKHLength);
     file.read(&maKH[0], maKHLength);
 
     // Đọc tên khách hàng
     int tenKHLength;
-    file.read((char *)&tenKHLength, sizeof(tenKHLength));
+    if (!file.read((char *)&tenKHLength, sizeof(tenKHLength)) && tenKHLength <= 0 && tenKHLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     tenKH.resize(tenKHLength);
     file.read(&tenKH[0], tenKHLength);
 
     // Đọc SĐT khách hàng
     int sdtLength;
-    file.read((char *)&sdtLength, sizeof(sdtLength));
+    if(!file.read((char *)&sdtLength, sizeof(sdtLength)) && sdtLength <= 0 && sdtLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     SDT.resize(sdtLength);
     file.read(&SDT[0], sdtLength);
 
     // Đọc CCCD khách hàng
     int cccdLength;
-    file.read((char *)&cccdLength, sizeof(cccdLength));
+    if (!file.read((char *)&cccdLength, sizeof(cccdLength)) && cccdLength <= 0 && cccdLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     CCCD.resize(cccdLength);
     file.read(&CCCD[0], cccdLength);
 }

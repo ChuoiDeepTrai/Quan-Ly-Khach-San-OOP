@@ -27,10 +27,10 @@ public:
     static string NhapChuoi(const string &msg);
     
     // Hàm nhập số thực
-    static double NhapSoThuc(const string &promt, double val);
+    static double NhapSoThuc(const string &promt);
 
     // Hàm nhập số nguyên
-    static int NhapSoNguyen(const string &promt, int val);
+    static int NhapSoNguyen(const string &promt);
 
     // Định dạng lại tiền tệ nhập vào
     static string DinhDanhTienVND(long long gia);

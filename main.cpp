@@ -28,8 +28,7 @@ int main()
         cout << "0. Thoat he thong.\n";
         cout << "-----------------------------------------------------------------\n";
 
-        TienIch::NhapSoNguyen("Nhap lua chon: ", choice);
-
+        choice = TienIch::NhapSoNguyen(Color::BOLD + Color::BLUE + "Nhap lua chon: " + Color::RESET);
         switch (choice)
         {
         case 1:

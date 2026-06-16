@@ -73,22 +73,37 @@ void DatPhong::DocFileDatPhong(ifstream &file)
 {
     // Đọc mã phòng
     int maPhongLength;
-    file.read((char *)&maPhongLength, sizeof(maPhongLength));
+    if (!file.read((char *)&maPhongLength, sizeof(maPhongLength)) && maPhongLength <= 0 && maPhongLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     maPhong.resize(maPhongLength);
     file.read(&maPhong[0], maPhongLength);
 
     // Đọc ma khách hàng
     int maKHLength;
-    file.read((char *)&maKHLength, sizeof(maKHLength));
+    if (!file.read((char *)&maKHLength, sizeof(maKHLength)) && maKHLength <= 0 && maKHLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     maKH.resize(maKHLength);
     file.read(&maKH[0], maKHLength);
 
     // Đọc ngày đặt
     int ngayDatLength;
-    file.read((char *)&ngayDatLength, sizeof(ngayDatLength));
+    if (!file.read((char *)&ngayDatLength, sizeof(ngayDatLength)) && ngayDatLength <= 0 && ngayDatLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     ngayDat.resize(ngayDatLength);
     file.read(&ngayDat[0], ngayDatLength);
 
     // Đọc trạng thái đặt phòng
-    file.read((char *)&trangThai, sizeof(trangThai));
+    if(!file.read((char *)&trangThai, sizeof(trangThai)))
+    {
+        return;
+    }
 }

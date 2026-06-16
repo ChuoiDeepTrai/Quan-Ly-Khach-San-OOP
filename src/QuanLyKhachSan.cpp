@@ -92,19 +92,25 @@ void QuanLyKhachSan::GhiFilePhong() const
 void QuanLyKhachSan::DocFilePhong()
 {
     ifstream file(FILE_PHONG, ios::binary);
-    if (!file)
+    if (!file.is_open())
     {
         return;
     }
     // Đọc số lượng phòng
     int numPhong = 0;
-    file.read((char *)&numPhong, sizeof(numPhong));
+    if(!file.read((char *)&numPhong, sizeof(numPhong)) || numPhong < 0 || numPhong > 1000)
+    {
+        file.close();
+        return;
+    }
 
     ds_phong.clear();
     for (int i = 0; i < numPhong; i++)
     {
+        if(file.peek() == EOF) break;
         Phong p;
         p.DocFilePhong(file);
+        if(file.fail()) break;
         ds_phong.push_back(p);
     }
     file.close();
@@ -131,19 +137,28 @@ void QuanLyKhachSan::GhiFileKhachHang() const
 void QuanLyKhachSan::DocFileKhachHang()
 {
     ifstream file(FILE_KHACH_HANG, ios::binary);
-    if (!file)
+    if (!file.is_open())
     {
         return;
     }
 
     // Đọc số lượng khách hàng
     int numKH = 0;
-    file.read((char *)&numKH, sizeof(numKH));
+    if(!file.read((char *)&numKH, sizeof(numKH)) || numKH <= 0 || numKH > 1000)
+    {
+        file.close();
+        return;
+    }
     ds_khach_hang.clear();
     for (int i = 0; i < numKH; i++)
     {
+        if(file.peek() == EOF) return;
         KhachHang kh;
         kh.DocFileKhachHang(file);
+        if(file.fail())
+        {
+            break;
+        }
         ds_khach_hang.push_back(kh);
     }
     file.close();
@@ -176,12 +191,18 @@ void QuanLyKhachSan::DocFileDatPhong()
         return;
     }
     int numDP = 0;
-    file.read((char *)&numDP, sizeof(numDP));
+    if(!file.read((char *)&numDP, sizeof(numDP)) || numDP < 0 || numDP > 1000)
+    {
+        file.close();
+        return;
+    }
     ds_dat_phong.clear();
     for (int i = 0; i < numDP; i++)
     {
+        if(file.peek() == EOF) break;
         DatPhong dp;
         dp.DocFileDatPhong(file);
+        if(file.fail()) break;
         ds_dat_phong.push_back(dp);
     }
     file.close();
@@ -209,7 +230,7 @@ void QuanLyKhachSan::taiToanBoDuLieu()
 // 1. Danh sách phòng.
 void QuanLyKhachSan::DanhSachPhong()
 {
-    cout << Color::BOLD << Color::CYAN << "\n"
+    cout << Color::BOLD << Color::BLUE << "\n"
          << setw(50) << right << "--- DANH SACH PHONG HIEN TAI ---\n"
          << Color::RESET;
 
@@ -236,7 +257,7 @@ void QuanLyKhachSan::DanhSachPhong()
 // 2. Danh sách khách hàng
 void QuanLyKhachSan::DanhSachKhachHang()
 {
-    cout << Color::BOLD << Color::CYAN << "\n"
+    cout << Color::BOLD << Color::BLUE << "\n"
          << setw(50) << right << "--- DANH SACH KHACH HANG ---\n"
          << Color::RESET;
 
@@ -260,7 +281,7 @@ void QuanLyKhachSan::DanhSachKhachHang()
 // 3. Danh sách phòng đang trống
 void QuanLyKhachSan::DanhSachPhongTrong()
 {
-    cout << Color::BOLD << Color::CYAN << "\n"
+    cout << Color::BOLD << Color::BLUE << "\n"
          << setw(50) << right << "--- DANH SACH PHONG TRONG ---\n"
          << Color::RESET;
     cout << left;
@@ -298,7 +319,7 @@ void QuanLyKhachSan::DanhSachPhongTrong()
 // 4. Danh sách phòng đang được thuê
 void QuanLyKhachSan::DanhSachPhongThue()
 {
-    cout << Color::BOLD << Color::CYAN << "\n"
+    cout << Color::BOLD << Color::BLUE << "\n"
          << right << setw(100) << "--- DANH SACH PHONG HIEN DANG DUOC THUE ---\n"
          << Color::RESET;
 
@@ -379,7 +400,7 @@ void QuanLyKhachSan::ThemPhong()
 
     tenP = TienIch::NhapChuoi("Nhap ten phong: ");
     loaiP = TienIch::NhapChuoi("Nhap loai phong: ");
-    giaP = TienIch::NhapSoThuc("Nhap gia phong (VND): ", giaP);
+    giaP = TienIch::NhapSoThuc("Nhap gia phong (VND): ");
 
     ds_phong.push_back(Phong(maP, tenP, loaiP, giaP));
     GhiFilePhong();
@@ -422,12 +443,13 @@ void QuanLyKhachSan::SuaPhong()
         cout << "Gia phong : " << TienIch::DinhDanhTienVND(p->getGiaPhong()) << "\n";
         cout << "Trang thai: " << (p->getTrangThai() ? Color::RED + "Dang duoc thue" + Color::RESET : Color::GREEN + "Dang trong" + Color::RESET) << "\n";
 
+        cout << Color::BOLD << Color::CYAN << "\n--- Nhap lua chon ---\n" << Color::RESET;
         cout << "1. Sua ten phong.\n";
         cout << "2. Sua loai phong.\n";
         cout << "3. Sua gia phong.\n";
         cout << "0. Hoan tat va Luu thay doi.\n";
 
-        TienIch::NhapSoNguyen("Nhap lua chon: ", choice);
+        choice = TienIch::NhapSoNguyen("Nhap lua chon: ");
         switch (choice)
         {
         case 1:
@@ -449,7 +471,7 @@ void QuanLyKhachSan::SuaPhong()
         case 3:
         {
             double giaP = 0.0;
-            giaP = TienIch::NhapSoThuc("Nhap gia phong moi: ", giaP);
+            giaP = TienIch::NhapSoThuc("Nhap gia phong moi: ");
             p->setGiaPhong(giaP);
             TienIch::ThongBaoThanhCong("Da sua gia phong.");
             break;
@@ -594,13 +616,13 @@ void QuanLyKhachSan::SuaKhachHang()
         cout << "CCCD: " << kh->getCCCD() << "\n";
         cout << string(26, '-') << "\n";
 
-        cout << Color::CYAN << "\n--- Nhap lua chon ---\n" << Color::RESET;
+        cout << Color::BOLD << Color::CYAN << "\n--- Nhap lua chon ---\n" << Color::RESET;
         cout << "1. Sua ten khach hang.\n";
         cout << "2. Sua SDT khach hang.\n";
         cout << "3. Sua CCCD khach hang.\n";
         cout << "0. Hoan tat va Luu thay doi.\n";
 
-        TienIch::NhapSoNguyen("Nhap lua chon: ", choice);
+        choice = TienIch::NhapSoNguyen("Nhap lua chon: ");
         switch (choice)
         {
         case 1:

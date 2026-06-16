@@ -84,32 +84,44 @@ void Phong::GhiFilePhong(ofstream &file) const
 void Phong::DocFilePhong(ifstream &file)
 {
     // Đọc mã phòng
-    // Đọc mã phòng
     int maLength;
-    file.read((char *)&maLength, sizeof(maLength));
-    if (maLength > 0)
+    if (!file.read((char *)&maLength, sizeof(maLength)) && maLength <= 0 && maLength > 1000)
     {
-        maPhong.resize(maLength);
-        file.read(&maPhong[0], maLength);
+        file.setstate(ios::failbit);
+        return;
     }
-    // maPhong.resize(maLength);
-    // file.read(&maPhong[0], maLength);
+    maPhong.resize(maLength);
+    file.read(&maPhong[0], maLength);
 
     // Đọc tên phòng
     int tenLength;
-    file.read((char *)&tenLength, sizeof(tenLength));
+    if (!file.read((char *)&tenLength, sizeof(tenLength)) && tenLength <= 0 && tenLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     tenPhong.resize(tenLength);
     file.read(&tenPhong[0], tenLength);
 
     // Đọc loại phòng
     int loaiLength;
-    file.read((char *)&loaiLength, sizeof(loaiLength));
+    if (!file.read((char *)&loaiLength, sizeof(loaiLength)) && loaiLength <= 0 && loaiLength > 1000)
+    {
+        file.setstate(ios::failbit);
+        return;
+    }
     loaiPhong.resize(loaiLength);
     file.read(&loaiPhong[0], loaiLength);
 
     // Đọc giá phòng
-    file.read((char *)&giaPhong, sizeof(giaPhong));
+    if(!file.read((char *)&giaPhong, sizeof(giaPhong)))
+    {
+        return;
+    }
 
     // Đọc trạng thái phòng
-    file.read((char *)&trangThai, sizeof(trangThai));
+    if(!file.read((char *)&trangThai, sizeof(trangThai)))
+    {
+        return;
+    }
 }

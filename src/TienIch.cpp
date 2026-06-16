@@ -30,8 +30,9 @@ string TienIch::NhapChuoi(const string &promt)
     return s;
 }
 
-double TienIch::NhapSoThuc(const string &promt, double val)
+double TienIch::NhapSoThuc(const string &promt)
 {   
+    double val = 0.0;
     while (true)
     {
         string s;
@@ -72,9 +73,10 @@ double TienIch::NhapSoThuc(const string &promt, double val)
 }
 
 // Hàm nhập số nguyên
-int TienIch::NhapSoNguyen(const string &promt, int val)
+int TienIch::NhapSoNguyen(const string &promt)
 {
-        while (true)
+    int val = 0;
+    while (true)
     {
         string s;
         cout << promt;
