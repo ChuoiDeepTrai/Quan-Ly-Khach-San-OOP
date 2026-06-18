@@ -85,7 +85,7 @@ void Phong::DocFilePhong(ifstream &file)
 {
     // Đọc mã phòng
     int maLength;
-    if (!file.read((char *)&maLength, sizeof(maLength)) && maLength <= 0 && maLength > 1000)
+    if (!file.read((char *)&maLength, sizeof(maLength)) || maLength <= 0 || maLength > 1000)
     {
         file.setstate(ios::failbit);
         return;
@@ -95,7 +95,7 @@ void Phong::DocFilePhong(ifstream &file)
 
     // Đọc tên phòng
     int tenLength;
-    if (!file.read((char *)&tenLength, sizeof(tenLength)) && tenLength <= 0 && tenLength > 1000)
+    if (!file.read((char *)&tenLength, sizeof(tenLength)) || tenLength <= 0 || tenLength > 1000)
     {
         file.setstate(ios::failbit);
         return;
@@ -105,7 +105,7 @@ void Phong::DocFilePhong(ifstream &file)
 
     // Đọc loại phòng
     int loaiLength;
-    if (!file.read((char *)&loaiLength, sizeof(loaiLength)) && loaiLength <= 0 && loaiLength > 1000)
+    if (!file.read((char *)&loaiLength, sizeof(loaiLength)) || loaiLength <= 0 || loaiLength > 1000)
     {
         file.setstate(ios::failbit);
         return;
