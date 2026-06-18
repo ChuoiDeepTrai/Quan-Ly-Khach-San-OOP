@@ -342,21 +342,14 @@ void QuanLyKhachSan::DanhSachPhongThue()
         {
             Phong *p = timPhong(dp.getMaPhong());
             KhachHang *kh = timKhachHang(dp.getMaKH());
-
-            string tenP = p->getTenPhong();
-            string loaiP = p->getLoaiPhong();
-            string giaP = TienIch::DinhDanhTienVND(p->getGiaPhong());
-
-            string tenkh = kh->getTenKH();
-
             string tt = Color::RED + "Dang thue" + Color::RESET;
 
             cout << setw(15) << p->getMaPhong()
-                 << setw(22) << tenP
+                 << setw(22) << p->getTenPhong()
                  << setw(15) << kh->getMaKH()
-                 << setw(25) << tenkh
-                 << setw(18) << loaiP
-                 << setw(20) << giaP
+                 << setw(25) << kh->getTenKH()
+                 << setw(18) << p->getLoaiPhong()
+                 << setw(20) << TienIch::DinhDanhTienVND(p->getGiaPhong())
                  << setw(25) << dp.getNgayDat()
                  << setw(10) << tt << "\n";
 
@@ -511,7 +504,7 @@ void QuanLyKhachSan::XoaPhong()
     Phong *p = timPhong(maP);
     if (p == nullptr)
     {
-        cout << "Khong tim thay phong co ma vua nhap!";
+        TienIch::ThongBaoLoi("Khong tim thay phong co ma vua nhap!");
         return;
     }
 
@@ -527,17 +520,16 @@ void QuanLyKhachSan::XoaPhong()
 
     if (confirm == "Y" || confirm == "y")
     {
-        for (size_t i = 0; i < ds_phong.size(); i++)
+        for (auto it = ds_phong.begin(); it != ds_phong.end(); ++it)
         {
-            if (ds_phong[i].getMaPhong() == maP)
+            if (it->getMaPhong() == p->getMaPhong())
             {
-                ds_phong.erase(ds_phong.begin() + i);
-
-                GhiFilePhong();
-                TienIch::ThongBaoThanhCong("Xoa phong thanh cong!");
-                return;
+                ds_phong.erase(it);
+                break;              
             }
         }
+        GhiFilePhong();
+        TienIch::ThongBaoThanhCong("Xoa phong thanh cong!");
     }
     else
     {
@@ -702,16 +694,16 @@ void QuanLyKhachSan::XoaKhachHang()
 
     if (confirm == "Y" || confirm == "y")
     {
-        for (size_t i = 0; i < ds_khach_hang.size(); i++)
+        for (auto it = ds_khach_hang.begin(); it != ds_khach_hang.end(); ++it)
         {
-            if (ds_khach_hang[i].getMaKH() == maKH)
+            if (it->getMaKH() == kh->getMaKH())
             {
-                ds_khach_hang.erase(ds_khach_hang.begin() + i);
-                GhiFileKhachHang();
-                TienIch::ThongBaoThanhCong("Xoa khach hang thanh cong!");
-                return;
+                ds_khach_hang.erase(it);
+                break;
             }
         }
+        GhiFilePhong();
+        TienIch::ThongBaoThanhCong("Xoa khach hang thanh cong!");
     }
     else
     {
@@ -779,10 +771,6 @@ void QuanLyKhachSan::DatPhongKhachSan()
     GhiFileDatPhong();
 
     TienIch::ThongBaoThanhCong("Dat phong thanh cong!");
-
-    cout << "Phong: " << p->getTenPhong() << " | Khach hang: " << kh->getTenKH() << "\n";
-    cout << "Thoi gian vao he thong: " << thoiGianCheckIn << "\n";
-    cout << "--------------------------------------------\n";
 }
 
 // 8. Trả phòng khách sạn (check-out)
